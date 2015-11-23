@@ -126,7 +126,7 @@ public class createFiles
               //If length is 3 or greater, write to file
               if(s10.length() >= 3)
               {
-                bwrterm.write(s10 + "," + review_id + "\n");
+                bwrterms.write(s10 + "," + review_id + "\n");
               }
             }
           }
@@ -145,7 +145,7 @@ public class createFiles
               //If length is 3 or greater, write to file
               if(s13.length() >= 3)
               {
-                bwrterm.write(s13 + "," + review_id + "\n");
+                bwrterms.write(s13 + "," + review_id + "\n");
               }
             }
           }
@@ -154,6 +154,7 @@ public class createFiles
         bwr.close();
         bws.close();
         bwp.close();
+        bwrterms.close();
       } catch(IOException e) {
         e.printStackTrace();
       }
