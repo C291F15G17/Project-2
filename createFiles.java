@@ -45,6 +45,7 @@ public class createFiles
       
         while((s = scan.readLine()) != null)
         {
+          s5 = "";
           if(s.length() == 0)
           {
             s = scan.readLine();
@@ -62,7 +63,7 @@ public class createFiles
           }
           if (s.toLowerCase().contains(pterm.toLowerCase()))
           {
-            s5 = s2;
+            s5 += s2;
             Scanner thing = new Scanner(s5);
             while(thing.hasNext())
             {
