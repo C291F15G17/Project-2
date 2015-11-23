@@ -75,11 +75,12 @@ public class createFiles
               }
             }
           }
+          System.out.println(s4);
+          bwr.write("," + s4);
         }
-        System.out.println(s4);
-        bwr.write("," + s4);
         bwr.close();
         bws.close();
+        bwp.close();
       } catch(IOException e) {
         e.printStackTrace();
       }
