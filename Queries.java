@@ -64,17 +64,11 @@ public class Queries
          Cursor cursor = pterms.openCursor(null, null);
          if ( cursor.getSearchKey(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
          {
-           System.out.println(new String(data.getData()));
-           key.setData(term.getBytes());
-           key.setSize(term.length());
-           
+           System.out.println(new String(data.getData()));          
            set.add(new String(data.getData()));
            while ( cursor.getNextDup(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
            {
              System.out.println( new String(data.getData()));
-             key.setData(term.getBytes());
-             key.setSize(term.length());
-             
              set.add(new String(data.getData()));
            }
          }
@@ -85,17 +79,46 @@ public class Queries
          ex.getMessage();
        }
 
-       return set;
-       
+       return set;  
+    }
+
+  public static HashSet<String> searchRTerms(String term)
+    {
+      HashSet<String> set = new HashSet<String>();
+      try
+      {
+        DatabaseConfig dbConfig = new DatabaseConfig();
+        dbConfig.setType(DatabaseType.BTREE);
+        Database rterms = new Database("rt.idx", null, dbConfig);
+        DatabaseEntry key = new DatabaseEntry(), data = new DatabaseEntry();
+        key.setData(term.getBytes());
+        key.setSize(term.length());
+        Cursor cursor = rterms.openCursor(null, null);
+        if ( cursor.getSearchKey(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+        {
+          System.out.println(new String(data.getData()));
+          set.add(new String(data.getData()));
+          while ( cursor.getNextDup(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+          {
+            System.out.println( new String(data.getData()));
+            set.add(new String(data.getData()));
+          }
+        }
+        rterms.close();
+      }
+      catch (Exception ex)
+      {
+        ex.getMessage();
+      }
       
-      
+      return set;
     }
 
 
   public static void main(String [] args)
     {
       ArrayList<String> queries = getQueries();
-      searchPTerms(queries.get(0));
+      System.out.println(searchPTerms(queries.get(0)));
     }
 
 
