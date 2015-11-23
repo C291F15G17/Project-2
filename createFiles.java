@@ -71,7 +71,7 @@ public class createFiles
               s7   = s6.replaceAll("[^a-zA-Z0-9_]", "");
               if(s7.length() >= 3)
               {
-                bwp.write(s7 + review_id + "\n");
+                bwp.write(s7 + "," + review_id + "\n");
               }
             }
           }
