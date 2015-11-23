@@ -74,11 +74,9 @@ public class createFiles
               }
             }
           }
-          }
-          }
-          System.out.println(s4);
-          bwr.write("," + s4);
         }
+        System.out.println(s4);
+        bwr.write("," + s4);
         bwr.close();
         bws.close();
       } catch(IOException e) {
