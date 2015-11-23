@@ -60,7 +60,7 @@ public class createFiles
             bws.write(s4 + "," + score_id + "\n");
             score_id++;
           }
-          if (s.toLowerCase().contains(pterm.toLowerCase())
+          if (s.toLowerCase().contains(pterm.toLowerCase()))
           {
             s5 = s2;
             Scanner thing = new Scanner(s5);
