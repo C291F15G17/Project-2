@@ -1,5 +1,10 @@
 # Project-2
 
+## Usage
+javac createFiles.java
+cat samplesFiles.txt | java createFiles
+./phase2.sh (Make sure you chmod 700 break.pl and chmod 700 phase2.sh)
+
 ##Resources
 Spec: https://eclass.srv.ualberta.ca/mod/page/view.php?id=1750959
 
