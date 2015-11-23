@@ -151,6 +151,7 @@ public class createFiles
           }
           bwr.write("," + s4);
         }
+        //Close all writers
         bwr.close();
         bws.close();
         bwp.close();
