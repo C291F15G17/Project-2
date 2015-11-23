@@ -63,10 +63,12 @@ public class createFiles
           if (s.toLowerCase().contains(pterm.toLowerCase()))
           {
             s5 = s2;
+            String s9 = s5;
             Scanner thing = new Scanner(s5);
+            Scanner thing2 = new Scanner(s9);
             while(thing.next() != null)
             {
-              s6 = thing.next();
+              s6 = thing2.next();
               s7   = s6.replaceAll("[^a-zA-Z0-9_]", "");
               if(s7.length() >= 3)
               {
