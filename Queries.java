@@ -138,10 +138,10 @@ public class Queries
           if (cursor.getSearchKeyRange(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
           {
             //set.add(new String(data.getData()));
-            byte[] test = data.getData();
+            byte[] test = key.getKey();
             while (cursor.getNext(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
             {
-              if(!data.getData().equals(test))
+              if(!key.getKey().equals(test))
               {
                 set.add(new String(data.getData()));
               }
