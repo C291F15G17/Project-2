@@ -204,7 +204,7 @@ public class Queries
         //Handle prices, scores, dates
         else if (queries.get(i).contains("<"))
         {
-          String sub_query = queries.get(i).split("<", 0);
+          String[] sub_query = queries.get(i).split("<", 0);
           //Handle score
           if(sub_query[0].equals("rscore"))
           {
@@ -245,7 +245,7 @@ public class Queries
         
         else if (queries.get(i).contains(">"))
         {
-          String sub_query = queries.get(i).split(">", 0);
+          String[] sub_query = queries.get(i).split(">", 0);
           //Handle score
           if(sub_query[0].equals("rscore"))
           {
