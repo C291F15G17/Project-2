@@ -192,33 +192,78 @@ public class Queries
       return set;
     }
 
-     public static HashSet<String> searchScores(String score, String operation)
+    //Method for handling search for scores 
+    public static HashSet<String> searchScores(String score)
     {
+      String string;
+      String[] sub_query;
       HashSet<String> set = new HashSet<String>();
       try
       {
         DatabaseConfig dbConfig = new DatabaseConfig();
         dbConfig.setType(DatabaseType.BTREE);
-        //dbConfig.setSortedDuplicates(true);
         Database scores = new Database("sc.idx", null, dbConfig);
         DatabaseEntry key = new DatabaseEntry(), data = new DatabaseEntry();
-        if (operation.equals("<"))
-        {
-          key.setData("0.0".getBytes());
-          key.setSize("0.0".length());
-          
-        } else
-        {
-          
-        }
         
+        if (score.contains(">"))
+        {
+          sub_query = score.split(">");
+          sub_query[1] += ".0";
+          key.setData(sub_query[1].getBytes());
+          key.setSize(sub_query[1].length());
+          Cursor cursor = scores.openCursor(null, null);
+          if (cursor.getSearchKeyRange(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+          {
+            String str = new String(key.getData());
+            if (!sub_query[1].equals(str))
+            {
+              set.add(new String(data.getData()));
+            }
+            
+            while (cursor.getNext(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+            {
+              string = new String(key.getData());
+              if (!sub_query[1].equals(string))
+              {
+                //System.out.println(string);
+                set.add(new String(data.getData()));
+              }
+            }
+          }
+        } 
+        //If searching for "<"
+        else
+        {
+          sub_query = score.split("<");
+          sub_query[1] += ".0";
+          key.setData(sub_query[1].getBytes());
+          key.setSize(sub_query[1].length());
+          Cursor cursor = scores.openCursor(null, null);
+          if (cursor.getSearchKeyRange(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+          {
+            String str = new String(key.getData());
+            if (!sub_query[1].equals(str))
+            {
+              set.add(new String(data.getData()));
+            }
+            
+            while (cursor.getPrev(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+            {
+              string = new String(key.getData());
+              if (!sub_query[1].equals(string))
+              {
+                //System.out.println(string);
+                set.add(new String(data.getData()));
+              }
+            }
+          }
+        }
         scores.close();
       }
       catch (Exception ex)
       {
         ex.getMessage();
       }
-      
       return set;
     }
 
@@ -436,10 +481,13 @@ public class Queries
         {
           System.out.println("REVIEW ID: " + revid);
           String review = new String(data.getData());
-          String[] revparts = review.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
-          System.out.println("PRODUCT NO = " + revparts[0] + " | PRODUCT NAME = " + revparts[1] + " | PRICE = " + revparts[3]);
-          System.out.println("USER NO = " + revparts[4] + " | USERNAME = " + revparts[5]);
-          
+          String[] revparts = review.split("(?x),(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
+          System.out.println("PRODUCT NO = " + revparts[0] + " | PRODUCT NAME = " + revparts[1] + " | PRICE = " + revparts[2]);
+          System.out.println("USER NO = " + revparts[3] + " | USERNAME = " + revparts[4]);
+          System.out.println("HELPFUL RATING = " + revparts[5] + " | RATING = " + revparts[6]);
+          System.out.println("REVIEW NO = " + revparts[7] + " | REVIEW TITLE = " + revparts[8]);
+          System.out.println("REVIEW = " + revparts[9]);
+
           System.out.println();
 //System.out.println(new String(data.getData()));
         }
@@ -508,6 +556,17 @@ public class Queries
             else
             {
               valid.retainAll(searchPrices(queries.get(i)));
+            }
+          }
+          else if (queries.get(i).contains("rscore"))
+          {
+            if (valid == null)
+            {
+              valid = searchScores(queries.get(i));
+            }
+            else
+            {
+              valid.retainAll(searchScores(queries.get(i)));
             }
           }
             
