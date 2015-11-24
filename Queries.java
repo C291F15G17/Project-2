@@ -103,10 +103,12 @@ public class Queries
            if (cursor.getSearchKeyRange(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
            {
              set.add(new String(data.getData()));
+             data = new DatabaseEntry();
              while ( cursor.getNextDup(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
              {
                //System.out.println(new String(data.getData()));
                set.add(new String(data.getData()));
+               data = new DatabaseEntry();
              }
            }
          }
@@ -174,10 +176,12 @@ public class Queries
           if (cursor.getSearchKeyRange(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
           {
             set.add(new String(data.getData()));
+            data = new DatabaseEntry();
             while ( cursor.getNextDup(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
             {
               //System.out.println(new String(data.getData()));
               set.add(new String(data.getData()));
+              data = new DatabaseEntry();
             }
           }
         }
@@ -218,6 +222,7 @@ public class Queries
             if (!sub_query[1].equals(str))
             {
               set.add(new String(data.getData()));
+              data = new DatabaseEntry();
             }
             
             while (cursor.getNext(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
@@ -227,6 +232,7 @@ public class Queries
               {
                 //System.out.println(string);
                 set.add(new String(data.getData()));
+                data = new DatabaseEntry();
               }
             }
           }
@@ -245,6 +251,7 @@ public class Queries
             if (!sub_query[1].equals(str))
             {
               set.add(new String(data.getData()));
+              data = new DatabaseEntry();
             }
             
             while (cursor.getPrev(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
@@ -254,6 +261,7 @@ public class Queries
               {
                 //System.out.println(string);
                 set.add(new String(data.getData()));
+                data = new DatabaseEntry();
               }
             }
           }
@@ -481,6 +489,7 @@ public class Queries
         {
           System.out.println("REVIEW ID: " + revid);
           String review = new String(data.getData());
+          data = new DatabaseEntry();
           String[] revparts = review.split("(?x),(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
           System.out.println("PRODUCT NO = " + revparts[0] + " | PRODUCT NAME = " + revparts[1] + " | PRICE = " + revparts[2]);
           System.out.println("USER NO = " + revparts[3] + " | USERNAME = " + revparts[4]);
