@@ -1,8 +1,9 @@
 import java.util.*;
 import java.nio.ByteBuffer;
 import com.sleepycat.db.*;
-
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+                              
 public class Queries
 {
   //Method ask for a query and then returns a list of sub_queries
@@ -230,14 +231,19 @@ public class Queries
 
       Iterator it = ids.iterator();
       while (it.hasNext()) {
-        //       int revid = (int)it.next();
         String revid =(String) it.next();
         key.setData(revid.getBytes());
         key.setSize(revid.length());
         if ((reviews.get(null, key, data, LockMode.DEFAULT)) == OperationStatus.SUCCESS)
         {
           System.out.println("REVIEW ID: " + revid);
-          System.out.println(new String(data.getData()));
+          String review = new String(data.getData());
+          String[] revparts = review.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+          System.out.println("PRODUCT NO = " + revparts[0] + " | PRODUCT NAME = " + revparts[1] + " | PRICE = " + revparts[3]);
+          System.out.println("USER NO = " + revparts[4] + " | USERNAME = " + revparts[5]);
+          
+          System.out.println();
+//System.out.println(new String(data.getData()));
         }
       }
       reviews.close();
