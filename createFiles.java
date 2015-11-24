@@ -66,7 +66,7 @@ public class createFiles
         BufferedWriter bwrterms = new BufferedWriter(fwrterms);
         //Write initial review id
         bwr.write(review_id + "");
-      
+        int i = 0;
         while((s = scan.readLine()) != null)
         {
           s5 = "";
@@ -77,6 +77,7 @@ public class createFiles
             review_id++;
             bwr.write("\n");
             bwr.write(review_id + "");
+            i = 0;
           }
           
           //Trim title off of each line
@@ -97,17 +98,19 @@ public class createFiles
           if (s.toLowerCase().contains(pterm.toLowerCase()))
           {
             s5 += s2;
+            s5 = s5.replaceAll("[^a-zA-Z0-9_]", " ");
+            
             //Grab each string in the line of product title
             Scanner thing = new Scanner(s5);
             while(thing.hasNext())
             {
               s6 = thing.next();
               //Get rid of all nonalphanumeric, nonunderscore characters
-              s7   = s6.replaceAll("[^a-zA-Z0-9_]", "");
+              //s7   = s6.replaceAll("[^a-zA-Z0-9_]", " ");
               //If length is 3 or greater, write to file
-              if(s7.length() >= 3)
+              if(s6.length() >= 3)
               {
-                bwp.write(s7 + "," + review_id + "\n");
+                bwp.write(s6.toLowerCase() + "," + review_id + "\n");
               }
             }
           }
@@ -116,17 +119,18 @@ public class createFiles
           if (s.toLowerCase().contains(rterm1.toLowerCase()))
           {
             s8 += s2;
+            s8 = s8.replaceAll("[^a-zA-Z0-9_]", " ");
             //Grab each string in the line of product title
             Scanner thing = new Scanner(s8);
             while(thing.hasNext())
             {
               s9 = thing.next();
               //Get rid of all nonalphanumeric, nonunderscore characters
-              s10   = s9.replaceAll("[^a-zA-Z0-9_]", "");
+              //s10   = s9.replaceAll("[^a-zA-Z0-9_]", "");
               //If length is 3 or greater, write to file
-              if(s10.length() >= 3)
+              if(s9.length() >= 3)
               {
-                bwrterms.write(s10 + "," + review_id + "\n");
+                bwrterms.write(s9.toLowerCase() + "," + review_id + "\n");
               }
             }
           }
@@ -135,21 +139,29 @@ public class createFiles
           if (s.toLowerCase().contains(rterm2.toLowerCase()))
           {
             s11 += s2;
+            s11 = s11.replaceAll("[^a-zA-Z0-9_]", " ");
             //Grab each string in the line of product title
             Scanner thing = new Scanner(s11);
             while(thing.hasNext())
             {
               s12 = thing.next();
               //Get rid of all nonalphanumeric, nonunderscore characters
-              s13   = s12.replaceAll("[^a-zA-Z0-9_]", "");
+              //s13   = s12.replaceAll("[^a-zA-Z0-9_]", "");
               //If length is 3 or greater, write to file
-              if(s13.length() >= 3)
+              if(s12.length() >= 3)
               {
-                bwrterms.write(s13 + "," + review_id + "\n");
+                bwrterms.write(s12.toLowerCase() + "," + review_id + "\n");
               }
             }
           }
-          bwr.write("," + s4);
+          if (i == 1 || i == 4 || i == 8 || i == 9)
+          {
+            bwr.write("," + '"' + s4 + '"');
+          }else
+          {
+            bwr.write("," + s4);
+          }
+          i++;
         }
         //Close all writers
         bwr.close();
