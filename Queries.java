@@ -210,8 +210,25 @@ public class Queries
             {
               valid.retainAll(searchPTerms(sub_query[1]));
             }
-            
-
+          }
+        }
+        else if (queries.get(i).contains("<") || queries.get(i).contains(">"))
+        {
+          //Handle price, dates and scores
+        }
+        //Assuming this is only terms with no r: or p:
+        else
+        {
+          if (valid == null)
+          {
+            valid = searchRTerms(queries.get(i));
+            valid.addAll(searchPTerms(queries.get(i)));
+          }
+          else
+          {
+            HashSet<String> valid2 = searchRTerms(queries.get(i));
+            valid2.addAll(searchPTerms(queries.get(i)));
+            valid.retainAll(valid2);
           }
         }
 
