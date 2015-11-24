@@ -6,7 +6,7 @@ public class createFiles
 {
   public static void main(String[] args) throws IOException
     {
-      BufferedReader scan = new BufferedReader(new InputStreamReader(System.in));
+      BufferedReader scan = new BufferedReader(new InputStreamReader(System.in), 100000);
       //Strings used for various operations later
       String s = "";
       String s2 = "";
@@ -74,6 +74,10 @@ public class createFiles
           if(s.length() == 0)
           {
             s = scan.readLine();
+            if (s == null)
+            {
+              break;
+            }
             review_id++;
             bwr.write("\n");
             bwr.write(review_id + "");
@@ -81,27 +85,27 @@ public class createFiles
           }
           
           //Trim title off of each line
-          s2 = s.substring(s.indexOf(':')+2);
+          String[] line = s.split(": ", 2);
           //Replace double quotations
-          s3 = s2.replaceAll("\"", "&quot;");
+          line[1] = line[1].replaceAll("\"", "&quot;");
           //Replace double backslashes
-          s4 = s3.replaceAll("\\\\", "\\\\\\");
+          line[1] = line[1].replace("\\", "\\\\");
           
           //Write scores to file
-          if (s.toLowerCase().contains(score.toLowerCase()))
+          if (line[0].toLowerCase().contains(score.toLowerCase()))
           {
-            bws.write(s4 + "," + score_id + "\n");
+            bws.write(line[1] + "," + score_id + "\n");
             score_id++;
           }
           
           //Check for terms in product title
-          if (s.toLowerCase().contains(pterm.toLowerCase()))
+          else if (line[0].toLowerCase().contains(pterm.toLowerCase()))
           {
-            s5 += s2;
-            s5 = s5.replaceAll("[^a-zA-Z0-9_]", " ");
+            
+            s2 = line[1].replaceAll("[^a-zA-Z0-9_]", " ");
             
             //Grab each string in the line of product title
-            Scanner thing = new Scanner(s5);
+            Scanner thing = new Scanner(s2);
             while(thing.hasNext())
             {
               s6 = thing.next();
@@ -116,12 +120,12 @@ public class createFiles
           }
           
           //Check for terms in review summary
-          if (s.toLowerCase().contains(rterm1.toLowerCase()))
+          else if (line[0].toLowerCase().contains(rterm1.toLowerCase()))
           {
-            s8 += s2;
-            s8 = s8.replaceAll("[^a-zA-Z0-9_]", " ");
+            
+            s2 = line[1].replaceAll("[^a-zA-Z0-9_]", " ");
             //Grab each string in the line of product title
-            Scanner thing = new Scanner(s8);
+            Scanner thing = new Scanner(s2);
             while(thing.hasNext())
             {
               s9 = thing.next();
@@ -136,12 +140,12 @@ public class createFiles
           }
           
           //Check for terms in review text
-          if (s.toLowerCase().contains(rterm2.toLowerCase()))
+          else if (line[0].toLowerCase().contains(rterm2.toLowerCase()))
           {
-            s11 += s2;
-            s11 = s11.replaceAll("[^a-zA-Z0-9_]", " ");
+            
+            s2 = line[1].replaceAll("[^a-zA-Z0-9_]", " ");
             //Grab each string in the line of product title
-            Scanner thing = new Scanner(s11);
+            Scanner thing = new Scanner(s2);
             while(thing.hasNext())
             {
               s12 = thing.next();
@@ -156,10 +160,10 @@ public class createFiles
           }
           if (i == 1 || i == 4 || i == 8 || i == 9)
           {
-            bwr.write("," + '"' + s4 + '"');
+            bwr.write("," + '"' + line[1] + '"');
           }else
           {
-            bwr.write("," + s4);
+            bwr.write("," + line[1]);
           }
           i++;
         }
