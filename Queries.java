@@ -216,8 +216,10 @@ public class Queries
           key.setData(sub_query[1].getBytes());
           key.setSize(sub_query[1].length());
           Cursor cursor = scores.openCursor(null, null);
+          //Search for closest score to one given by user
           if (cursor.getSearchKeyRange(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
           {
+            //Prevent adding scores that are equal to one given
             String str = new String(key.getData());
             if (!sub_query[1].equals(str))
             {
@@ -225,9 +227,11 @@ public class Queries
             }
             data = new DatabaseEntry();
             
+            //Get next item in index
             while (cursor.getNext(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
             {
               string = new String(key.getData());
+              //Prevent adding scores that are equal to one given
               if (!sub_query[1].equals(string))
               {
                 //System.out.println(string);
@@ -245,8 +249,10 @@ public class Queries
           key.setData(sub_query[1].getBytes());
           key.setSize(sub_query[1].length());
           Cursor cursor = scores.openCursor(null, null);
+          //Search for closest score to one given by user
           if (cursor.getSearchKeyRange(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
           {
+            //Prevent adding scores that are equal to one given
             String str = new String(key.getData());
             if (!sub_query[1].equals(str))
             {
@@ -257,6 +263,7 @@ public class Queries
             
             while (cursor.getPrev(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
             {
+              //Prevent adding scores that are equal to one given
               string = new String(key.getData());
               if (!sub_query[1].equals(string))
               {
