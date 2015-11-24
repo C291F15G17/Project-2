@@ -6,15 +6,16 @@ import java.util.regex.Pattern;
                               
 public class Queries
 {
+  //Method ask for a query and then returns a list of sub_queries
   public static ArrayList<String> getQueries()
     {
       Scanner input = new Scanner(System.in);
       ArrayList<String> queries = new ArrayList<String>();
-
+      //Get the query from the user
       System.out.print("Please enter a query: ");
       String queryString = input.nextLine();
       Scanner queryInput = new Scanner(queryString);
-      //Creates a ArrayList of queries all with 0 whitespace
+      //Creates a ArrayList of queries all with 0 whitespace, handled based off of format
       while (queryInput.hasNext())
       {
         String curr = queryInput.next();
@@ -44,11 +45,9 @@ public class Queries
         
         
       }
-      
-      
       return queries;
     }
-
+  //Takes in a term and then finds all ids that match term in pterms
   public static HashSet<String> searchPTerms(String term)
     {
       HashSet<String> set = new HashSet<String>();
@@ -59,19 +58,56 @@ public class Queries
          //dbConfig.setSortedDuplicates(true);
          Database pterms = new Database("pt.idx", null, dbConfig);
          DatabaseEntry key = new DatabaseEntry(), data = new DatabaseEntry();
-         key.setData(term.getBytes());
-         key.setSize(term.length());
+         
          Cursor cursor = pterms.openCursor(null, null);
-         if ( cursor.getSearchKey(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+         //Handle wildcards
+         if (term.contains("%"))
          {
-           //System.out.println(new String(data.getData()));          
-           set.add(new String(data.getData()));
-           while ( cursor.getNextDup(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+           term = term.replaceAll("%", "");
+           key.setData(term.getBytes());
+           key.setSize(term.length());
+           System.out.println(term);
+           //Key range used to find smallest that contains the term
+           if (cursor.getSearchKeyRange(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
            {
-             //System.out.println(new String(data.getData()));
              set.add(new String(data.getData()));
+             data = new DatabaseEntry();
+             //Look for the remaining duplicates
+             while ( cursor.getNextDup(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+             {
+               //System.out.println(new String(data.getData()));
+               set.add(new String(data.getData()));
+               data = new DatabaseEntry();
+             }
+           }
+           //After no duplicates go to the next key, check to see if it still contains the term
+           while (cursor.getNext(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS && new String(key.getData()).contains(term))
+           {
+             set.add(new String(data.getData()));
+             //Get duplicates of that key
+             while (cursor.getNextDup(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+             {
+               set.add(new String(data.getData()));
+               data = new DatabaseEntry();
+             }
            }
          }
+         //If no wildcard present
+         else
+         {
+           key.setData(term.getBytes());
+           key.setSize(term.length());
+           if (cursor.getSearchKeyRange(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+           {
+             set.add(new String(data.getData()));
+             while ( cursor.getNextDup(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+             {
+               //System.out.println(new String(data.getData()));
+               set.add(new String(data.getData()));
+             }
+           }
+         }
+         cursor.close();
          pterms.close();
        }
        catch (Exception ex)
@@ -81,7 +117,7 @@ public class Queries
 
        return set;  
     }
-
+  //Takes in a term and finds the ids of those that match in rterms
   public static HashSet<String> searchRTerms(String term)
     {
       HashSet<String> set = new HashSet<String>();
@@ -92,22 +128,56 @@ public class Queries
         //dbConfig.setSortedDuplicates(true);
         Database rterms = new Database("rt.idx", null, dbConfig);
         DatabaseEntry key = new DatabaseEntry(), data = new DatabaseEntry();
-        OperationStatus oprStatus;
-        key.setData(term.getBytes());
-        key.setSize(term.length());
+        
         Cursor cursor = rterms.openCursor(null, null);
-        if ( cursor.getSearchKey(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+        //Handle wildcards
+        if (term.contains("%"))
         {
-          //System.out.println(new String(data.getData()));
-          set.add(new String(data.getData()));
-          while ( cursor.getNextDup(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+          term = term.replaceAll("%", "");
+          key.setData(term.getBytes());
+          key.setSize(term.length());
+          System.out.println(term);
+          //Key range used to find smalled that contains the term
+          if (cursor.getSearchKeyRange(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
           {
-            //System.out.println(new String(data.getData()));
             set.add(new String(data.getData()));
+            data = new DatabaseEntry();
+            //Find duplicates of the key
+            while ( cursor.getNextDup(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+            {
+              //System.out.println(new String(data.getData()));
+              set.add(new String(data.getData()));
+              data = new DatabaseEntry();
+            }
+          }
+          //After the duplicates are done go to next key, make sure it still contains the term
+          while (cursor.getNext(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS && new String(key.getData()).contains(term))
+          {
+            set.add(new String(data.getData()));
+            //Get any duplicates
+            while (cursor.getNextDup(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+            {
+              set.add(new String(data.getData()));
+              data = new DatabaseEntry();
+            }
+          }
+          
+        }
+        //If no wildcard
+        else
+        {
+          key.setData(term.getBytes());
+          key.setSize(term.length());
+          if (cursor.getSearchKeyRange(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+          {
+            set.add(new String(data.getData()));
+            while ( cursor.getNextDup(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+            {
+              //System.out.println(new String(data.getData()));
+              set.add(new String(data.getData()));
+            }
           }
         }
-        
-        
         cursor.close();
         rterms.close();
       }
