@@ -151,12 +151,43 @@ public class Queries
       return set;
     }
 
+    public static void printReviews(HashSet<String> ids) {
+      try
+      {      
+      DatabaseConfig dbConfig = new DatabaseConfig();
+      dbConfig.setType(DatabaseType.BTREE);
+      //dbConfig.setSortedDuplicates(true);
+      Database reviews = new Database("rw.idx", null, dbConfig);
+      DatabaseEntry key = new DatabaseEntry(), data = new DatabaseEntry();
+      OperationStatus oprStatus;
+
+      Iterator it = ids.iterator();
+      while (it.hasNext()) {
+        //       int revid = (int)it.next();
+        String revid =(String) it.next();
+        key.setData(revid.getBytes());
+        key.setSize(revid.length());
+        if ((reviews.get(null, key, data, LockMode.DEFAULT)) == OperationStatus.SUCCESS)
+        {
+          System.out.println("REVIEW ID: " + revid);
+          System.out.println(new String(data.getData()));
+        }
+      }
+      reviews.close();
+      }
+      catch (Exception ex)
+      {
+        ex.getMessage();
+      }
+    }
 
 
   public static void main(String [] args)
     {
       ArrayList<String> queries = getQueries();
-      System.out.println(searchRTerms(queries.get(0)));
+      HashSet<String> revid = searchRTerms(queries.get(0));
+      printReviews(revid);
+      //     System.out.println(searchRTerms(queries.get(0)));
     }
 
 
