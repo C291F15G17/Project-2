@@ -214,7 +214,7 @@ public class Queries
             }
             else
             {
-              valid = retainAll(searchScores(sub_query[1], "<"));
+              valid.retainAll(searchScores(sub_query[1], "<"));
             }
           }
           //Handle price
@@ -255,7 +255,7 @@ public class Queries
             }
             else
             {
-              valid = retainAll(searchScores(sub_query[1], ">"));
+              valid.retainAll(searchScores(sub_query[1], ">"));
             }
           }
           //Handle price
