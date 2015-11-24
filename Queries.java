@@ -44,10 +44,7 @@ public class Queries
         
       }
       
-      for ( int i =0; i < queries.size(); i++)
-      {
-        System.out.println(queries.get(i));
-      }
+      
       return queries;
     }
 
@@ -66,11 +63,11 @@ public class Queries
          Cursor cursor = pterms.openCursor(null, null);
          if ( cursor.getSearchKey(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
          {
-           System.out.println(new String(data.getData()));          
+           //System.out.println(new String(data.getData()));          
            set.add(new String(data.getData()));
            while ( cursor.getNextDup(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
            {
-             System.out.println(new String(data.getData()));
+             //System.out.println(new String(data.getData()));
              set.add(new String(data.getData()));
            }
          }
@@ -100,11 +97,11 @@ public class Queries
         Cursor cursor = rterms.openCursor(null, null);
         if ( cursor.getSearchKey(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
         {
-          System.out.println(new String(data.getData()));
+          //System.out.println(new String(data.getData()));
           set.add(new String(data.getData()));
           while ( cursor.getNextDup(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
           {
-            System.out.println(new String(data.getData()));
+            //System.out.println(new String(data.getData()));
             set.add(new String(data.getData()));
           }
         }
@@ -185,9 +182,41 @@ public class Queries
   public static void main(String [] args)
     {
       ArrayList<String> queries = getQueries();
-      HashSet<String> revid = searchRTerms(queries.get(0));
-      printReviews(revid);
-      //     System.out.println(searchRTerms(queries.get(0)));
+      HashSet<String> valid = null;
+      for (int i = 0; i < queries.size(); i++)
+      {
+        if (queries.get(i).contains(":"))
+        {
+          String[] sub_query = queries.get(i).split(":", 0);
+          if (sub_query[0].equals("r"))
+          {
+            if (valid == null)
+            {
+              valid = searchRTerms(sub_query[1]);
+			  printReviews(valid);
+            }
+            else
+            {
+              valid.retainAll(searchRTerms(sub_query[1]));
+            } 
+          }
+          else if (sub_query[0].equals("p"))
+          {
+            if (valid == null)
+            {
+              valid = searchPTerms(sub_query[1]);
+            }
+            else
+            {
+              valid.retainAll(searchPTerms(sub_query[1]));
+            }
+            
+
+          }
+        }
+
+      }
+      System.out.println(valid);
     }
 
 
