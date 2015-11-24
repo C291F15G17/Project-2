@@ -139,7 +139,7 @@ public class Queries
           Cursor cursor = scores.openCursor(null, null);
           if (cursor.getSearchKeyRange(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
           {
-            String str = new String(kety.getData());
+            String str = new String(key.getData());
             if (!score.equals(str))
             {
               set.add(new String(data.getData()));
