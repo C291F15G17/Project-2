@@ -58,7 +58,7 @@ public class Queries
        {
          DatabaseConfig dbConfig = new DatabaseConfig();
          dbConfig.setType(DatabaseType.BTREE);
-         dbConfig.setSortedDuplicates(true);
+         //dbConfig.setSortedDuplicates(true);
          Database pterms = new Database("pt.idx", null, dbConfig);
          DatabaseEntry key = new DatabaseEntry(), data = new DatabaseEntry();
          key.setData(term.getBytes());
@@ -91,9 +91,10 @@ public class Queries
       {
         DatabaseConfig dbConfig = new DatabaseConfig();
         dbConfig.setType(DatabaseType.BTREE);
-        dbConfig.setSortedDuplicates(true);
+        //dbConfig.setSortedDuplicates(true);
         Database rterms = new Database("rt.idx", null, dbConfig);
         DatabaseEntry key = new DatabaseEntry(), data = new DatabaseEntry();
+        OperationStatus oprStatus;
         key.setData(term.getBytes());
         key.setSize(term.length());
         Cursor cursor = rterms.openCursor(null, null);
@@ -101,12 +102,14 @@ public class Queries
         {
           System.out.println(new String(data.getData()));
           set.add(new String(data.getData()));
-          while ( cursor.getNextDup(key, data, LockMode.DEFAULT) ==  OperationStatus.SUCCESS)
+          while ( cursor.getNextDup(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
           {
             System.out.println(new String(data.getData()));
             set.add(new String(data.getData()));
           }
         }
+        
+        
         cursor.close();
         rterms.close();
       }
@@ -125,20 +128,20 @@ public class Queries
       {
         DatabaseConfig dbConfig = new DatabaseConfig();
         dbConfig.setType(DatabaseType.BTREE);
-        dbConfig.setSortedDuplicates(true);
+        //dbConfig.setSortedDuplicates(true);
         Database scores = new Database("sc.idx", null, dbConfig);
         DatabaseEntry key = new DatabaseEntry(), data = new DatabaseEntry();
         if (operation.equals("<"))
         {
-          key.setData("0.0");
+          key.setData("0.0".getBytes());
           key.setSize("0.0".length());
-          Cursor cursor = scores.openCursor(null, null);
+          
         } else
         {
           
         }
-        cursor.close();
-        rterms.close();
+        
+        scores.close();
       }
       catch (Exception ex)
       {
