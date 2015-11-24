@@ -315,6 +315,108 @@ public class Queries
       return set;
     }
 
+    public static HashSet<String> searchPrices(String query)
+    {
+      HashSet<String> set = new HashSet<String>();
+      String[] sub_query;
+      if (query.contains("<"))
+      {
+        sub_query = query.split("<");
+        try
+        {
+          DatabaseConfig dbConfig = new DatabaseConfig();
+          dbConfig.setType(DatabaseType.HASH);
+          
+          Database reviews = new Database("rw.idx", null, dbConfig);
+          DatabaseEntry key = new DatabaseEntry(), data = new DatabaseEntry();
+          Cursor cursor = reviews.openCursor(null, null);
+          if (cursor.getFirst(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+          {
+            String string = new String(data.getData());
+            
+            String[] sub_data = string.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+            if (sub_data[2].equals("unknown"))
+            {
+            }
+            //May need to convert to number
+            else if (Float.parseFloat(sub_data[2]) < Float.parseFloat(sub_query[1]))
+            {
+              set.add(new String(key.getData()));
+            }
+            
+            while (cursor.getNext(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+            {
+              string = new String(data.getData());
+              sub_data = string.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+              if (sub_data[2].equals("unknown"))
+              {}
+              //May need to convert to number
+              else if (Float.parseFloat(sub_data[2]) < Float.parseFloat(sub_query[1]))
+              {
+                set.add(new String(key.getData()));
+              }
+            }
+          }
+          cursor.close();
+          reviews.close();
+        }
+        catch(Exception ex)
+        {
+          ex.getMessage();
+        }
+
+      }
+      else if (query.contains(">"))
+      {
+        sub_query = query.split(">");
+        try
+        {
+          DatabaseConfig dbConfig = new DatabaseConfig();
+          dbConfig.setType(DatabaseType.HASH);
+          
+          Database reviews = new Database("rw.idx", null, dbConfig);
+          DatabaseEntry key = new DatabaseEntry(), data = new DatabaseEntry();
+          Cursor cursor = reviews.openCursor(null, null);
+          if (cursor.getFirst(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+          {
+            String string = new String(data.getData());
+            
+            String[] sub_data = string.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+            if (sub_data[2].equals("unknown"))
+            {
+            }
+            //May need to convert to number
+            else if (Float.parseFloat(sub_data[2]) > Float.parseFloat(sub_query[1]))
+            {
+              set.add(new String(key.getData()));
+            }
+            
+            while (cursor.getNext(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+            {
+              string = new String(data.getData());
+              sub_data = string.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+              if (sub_data[2].equals("unknown"))
+              {}
+              //May need to convert to number
+              else if (Float.parseFloat(sub_data[2]) > Float.parseFloat(sub_query[1]))
+              {
+                set.add(new String(key.getData()));
+              }
+            }
+          }
+          cursor.close();
+          reviews.close();
+        }
+        catch(Exception ex)
+        {
+          ex.getMessage();
+        }
+      }
+
+
+      return set;
+    }
+
     public static void printReviews(HashSet<String> ids) {
       try
       {      
@@ -386,7 +488,29 @@ public class Queries
         else if (queries.get(i).contains("<") || queries.get(i).contains(">"))
         {
           //Handle price, dates and scores
-          searchDates(queries.get(i));
+          if ( queries.get(i).contains("rdate"))
+          {
+            if (valid == null)
+            {
+              valid = searchDates(queries.get(i));
+            }
+            else
+            {
+              valid.retainAll(searchDates(queries.get(i)));
+            }
+          }
+          else if (queries.get(i).contains("pprice"))
+          {
+            if (valid == null)
+            {
+              valid = searchPrices(queries.get(i));
+            }
+            else
+            {
+              valid.retainAll(searchPrices(queries.get(i)));
+            }
+          }
+            
         }
         //Assuming this is only terms with no r: or p:
         else
