@@ -1,7 +1,7 @@
 echo "Sorting Files..."
-sort -u -t, -k 1,1 -k 2,2n -o scores.txt scores.txt
-sort -u -t, -k 1,1 -k 2,2n -o pterms.txt pterms.txt
-sort -u -t, -k 1,1 -k 2,2n -o rterms.txt rterms.txt
+sort -u -o scores.txt scores.txt
+sort -u -o pterms.txt pterms.txt
+sort -u -o rterms.txt rterms.txt
 
 echo "Creating index files..."
 cat reviews.txt | perl break.pl | db_load -c duplicates=1 -T -t hash rw.idx
