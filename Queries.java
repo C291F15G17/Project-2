@@ -152,7 +152,7 @@ public class Queries
       try
       {      
       DatabaseConfig dbConfig = new DatabaseConfig();
-      dbConfig.setType(DatabaseType.BTREE);
+      dbConfig.setType(DatabaseType.HASH);
       //dbConfig.setSortedDuplicates(true);
       Database reviews = new Database("rw.idx", null, dbConfig);
       DatabaseEntry key = new DatabaseEntry(), data = new DatabaseEntry();
@@ -193,7 +193,6 @@ public class Queries
             if (valid == null)
             {
               valid = searchRTerms(sub_query[1]);
-			  printReviews(valid);
             }
             else
             {
@@ -234,6 +233,7 @@ public class Queries
 
       }
       System.out.println(valid);
+      printReviews(valid);
     }
 
 
