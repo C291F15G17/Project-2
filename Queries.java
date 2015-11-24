@@ -121,6 +121,7 @@ public class Queries
     //Method for handling search for scores 
     public static HashSet<String> searchScores(String score, String operation)
     {
+      score += ".0";
       HashSet<String> set = new HashSet<String>();
       try
       {
@@ -138,8 +139,10 @@ public class Queries
           if (cursor.getSearchKeyRange(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
           {
             //set.add(new String(data.getData()));
+            System.out.println(data.getData());
             while (cursor.getNext(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
             {
+              System.out.println(data.getData());
               set.add(new String(data.getData()));
             }
           }
