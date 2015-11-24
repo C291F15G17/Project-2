@@ -144,8 +144,11 @@ public class Queries
             while (cursor.getNext(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
             {
               string = new String(key.getData());
-              System.out.println(string);
-              set.add(new String(data.getData()));
+              if (!score.equals(string))
+              {
+                System.out.println(string);
+                set.add(new String(data.getData()));
+              }
             }
           }
         } 
