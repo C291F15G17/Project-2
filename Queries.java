@@ -150,7 +150,7 @@ public class Queries
               string = new String(key.getData());
               if (!score.equals(string))
               {
-                System.out.println(string);
+                //System.out.println(string);
                 set.add(new String(data.getData()));
               }
             }
@@ -175,7 +175,7 @@ public class Queries
               string = new String(key.getData());
               if (!score.equals(string))
               {
-                System.out.println(string);
+                //System.out.println(string);
                 set.add(new String(data.getData()));
               }
             }
