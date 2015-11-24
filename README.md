@@ -7,6 +7,7 @@ cat samplesFiles.txt | java createFiles
 
 ##Resources
 Spec: https://eclass.srv.ualberta.ca/mod/page/view.php?id=1750959
+
 Splitting strings: http://stackoverflow.com/questions/18893390/splitting-on-comma-outside-quotes
 
 
