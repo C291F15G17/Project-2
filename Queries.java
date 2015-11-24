@@ -122,13 +122,13 @@ public class Queries
     public static HashSet<String> searchScores(String score, String operation)
     {
       String string;
+      //Add to given string to help with searching
       score += ".0";
       HashSet<String> set = new HashSet<String>();
       try
       {
         DatabaseConfig dbConfig = new DatabaseConfig();
         dbConfig.setType(DatabaseType.BTREE);
-        //dbConfig.setSortedDuplicates(true);
         Database scores = new Database("sc.idx", null, dbConfig);
         DatabaseEntry key = new DatabaseEntry(), data = new DatabaseEntry();
         
@@ -164,10 +164,20 @@ public class Queries
           Cursor cursor = scores.openCursor(null, null);
           if (cursor.getSearchKeyRange(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
           {
-            //set.add(new String(data.getData()));
-            while (cursor.getPrev(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+            String str = new String(key.getData());
+            if (!score.equals(str))
             {
               set.add(new String(data.getData()));
+            }
+            
+            while (cursor.getPrev(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+            {
+              string = new String(key.getData());
+              if (!score.equals(string))
+              {
+                System.out.println(string);
+                set.add(new String(data.getData()));
+              }
             }
           }
         }
