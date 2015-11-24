@@ -66,7 +66,7 @@ public class createFiles
         BufferedWriter bwrterms = new BufferedWriter(fwrterms);
         //Write initial review id
         bwr.write(review_id + "");
-      
+        int i = 0;
         while((s = scan.readLine()) != null)
         {
           s5 = "";
@@ -77,6 +77,7 @@ public class createFiles
             review_id++;
             bwr.write("\n");
             bwr.write(review_id + "");
+            i = 0;
           }
           
           //Trim title off of each line
@@ -153,7 +154,14 @@ public class createFiles
               }
             }
           }
-          bwr.write("," + s4);
+          if (i == 1 || i == 4 || i == 8 || i == 9)
+          {
+            bwr.write("," + '"' + s4 + '"');
+          }else
+          {
+            bwr.write("," + s4);
+          }
+          i++;
         }
         //Close all writers
         bwr.close();
