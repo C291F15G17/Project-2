@@ -192,33 +192,78 @@ public class Queries
       return set;
     }
 
-     public static HashSet<String> searchScores(String score, String operation)
+    //Method for handling search for scores 
+    public static HashSet<String> searchScores(String score)
     {
+      String string;
+      String[] sub_query;
       HashSet<String> set = new HashSet<String>();
       try
       {
         DatabaseConfig dbConfig = new DatabaseConfig();
         dbConfig.setType(DatabaseType.BTREE);
-        //dbConfig.setSortedDuplicates(true);
         Database scores = new Database("sc.idx", null, dbConfig);
         DatabaseEntry key = new DatabaseEntry(), data = new DatabaseEntry();
-        if (operation.equals("<"))
-        {
-          key.setData("0.0".getBytes());
-          key.setSize("0.0".length());
-          
-        } else
-        {
-          
-        }
         
+        if (score.contains(">"))
+        {
+          sub_query = score.split(">");
+          sub_query[1] += ".0";
+          key.setData(sub_query[1].getBytes());
+          key.setSize(sub_query[1].length());
+          Cursor cursor = scores.openCursor(null, null);
+          if (cursor.getSearchKeyRange(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+          {
+            String str = new String(key.getData());
+            if (!sub_query[1].equals(str))
+            {
+              set.add(new String(data.getData()));
+            }
+            
+            while (cursor.getNext(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+            {
+              string = new String(key.getData());
+              if (!sub_query[1].equals(string))
+              {
+                //System.out.println(string);
+                set.add(new String(data.getData()));
+              }
+            }
+          }
+        } 
+        //If searching for "<"
+        else
+        {
+          sub_query = score.split("<");
+          sub_query[1] += ".0";
+          key.setData(sub_query[1].getBytes());
+          key.setSize(sub_query[1].length());
+          Cursor cursor = scores.openCursor(null, null);
+          if (cursor.getSearchKeyRange(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+          {
+            String str = new String(key.getData());
+            if (!sub_query[1].equals(str))
+            {
+              set.add(new String(data.getData()));
+            }
+            
+            while (cursor.getPrev(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+            {
+              string = new String(key.getData());
+              if (!sub_query[1].equals(string))
+              {
+                //System.out.println(string);
+                set.add(new String(data.getData()));
+              }
+            }
+          }
+        }
         scores.close();
       }
       catch (Exception ex)
       {
         ex.getMessage();
       }
-      
       return set;
     }
 
@@ -511,6 +556,17 @@ public class Queries
             else
             {
               valid.retainAll(searchPrices(queries.get(i)));
+            }
+          }
+          else if (queries.get(i).contains("rscore"))
+          {
+            if (valid == null)
+            {
+              valid = searchScores(queries.get(i));
+            }
+            else
+            {
+              valid.retainAll(searchScores(queries.get(i)));
             }
           }
             
