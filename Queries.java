@@ -58,19 +58,51 @@ public class Queries
          //dbConfig.setSortedDuplicates(true);
          Database pterms = new Database("pt.idx", null, dbConfig);
          DatabaseEntry key = new DatabaseEntry(), data = new DatabaseEntry();
-         key.setData(term.getBytes());
-         key.setSize(term.length());
+         
          Cursor cursor = pterms.openCursor(null, null);
-         if ( cursor.getSearchKey(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+         if (term.contains("%"))
          {
-           //System.out.println(new String(data.getData()));          
-           set.add(new String(data.getData()));
-           while ( cursor.getNextDup(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+           term = term.replaceAll("%", "");
+           key.setData(term.getBytes());
+           key.setSize(term.length());
+           System.out.println(term);
+
+           if (cursor.getSearchKeyRange(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
            {
-             //System.out.println(new String(data.getData()));
              set.add(new String(data.getData()));
+             data = new DatabaseEntry();
+             while ( cursor.getNextDup(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+             {
+               //System.out.println(new String(data.getData()));
+               set.add(new String(data.getData()));
+               data = new DatabaseEntry();
+             }
+           }
+           while (cursor.getNext(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS && new String(key.getData()).contains(term))
+           {
+             set.add(new String(data.getData()));
+             while (cursor.getNextDup(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+             {
+               set.add(new String(data.getData()));
+               data = new DatabaseEntry();
+             }
            }
          }
+         else
+         {
+           key.setData(term.getBytes());
+           key.setSize(term.length());
+           if (cursor.getSearchKeyRange(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+           {
+             set.add(new String(data.getData()));
+             while ( cursor.getNextDup(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+             {
+               //System.out.println(new String(data.getData()));
+               set.add(new String(data.getData()));
+             }
+           }
+         }
+         cursor.close();
          pterms.close();
        }
        catch (Exception ex)
@@ -91,20 +123,52 @@ public class Queries
         //dbConfig.setSortedDuplicates(true);
         Database rterms = new Database("rt.idx", null, dbConfig);
         DatabaseEntry key = new DatabaseEntry(), data = new DatabaseEntry();
-        OperationStatus oprStatus;
-        key.setData(term.getBytes());
-        key.setSize(term.length());
+        
         Cursor cursor = rterms.openCursor(null, null);
-        if ( cursor.getSearchKey(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+        if (term.contains("%"))
         {
-          //System.out.println(new String(data.getData()));
-          set.add(new String(data.getData()));
-          while ( cursor.getNextDup(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+          term = term.replaceAll("%", "");
+          key.setData(term.getBytes());
+          key.setSize(term.length());
+          System.out.println(term);
+
+          if (cursor.getSearchKeyRange(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
           {
-            //System.out.println(new String(data.getData()));
             set.add(new String(data.getData()));
+            data = new DatabaseEntry();
+            while ( cursor.getNextDup(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+            {
+              //System.out.println(new String(data.getData()));
+              set.add(new String(data.getData()));
+              data = new DatabaseEntry();
+            }
+          }
+          while (cursor.getNext(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS && new String(key.getData()).contains(term))
+          {
+            set.add(new String(data.getData()));
+            while (cursor.getNextDup(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+            {
+              set.add(new String(data.getData()));
+              data = new DatabaseEntry();
+            }
+          }
+          
+        }
+        else
+        {
+          key.setData(term.getBytes());
+          key.setSize(term.length());
+          if (cursor.getSearchKeyRange(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+          {
+            set.add(new String(data.getData()));
+            while ( cursor.getNextDup(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+            {
+              //System.out.println(new String(data.getData()));
+              set.add(new String(data.getData()));
+            }
           }
         }
+        
         
         
         cursor.close();
