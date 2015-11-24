@@ -69,7 +69,7 @@ public class Queries
            term = term.replaceAll("%", "");
            key.setData(term.getBytes());
            key.setSize(term.length());
-           System.out.println(term);
+           
            //Key range used to find smallest that contains the term
            if (cursor.getSearchKeyRange(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
            {
@@ -80,36 +80,21 @@ public class Queries
              {
               set.add(new String(data.getData()));
               data = new DatabaseEntry();
+              key = new DatabaseEntry();
              }
              //Look for the remaining duplicates
-             while ( cursor.getNextDup(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+
+             while ( cursor.getNext(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS &&
+                     new String(key.getData()).substring(0,term.length()).equals(term))
              {
-               //System.out.println(new String(data.getData()));
+               
                set.add(new String(data.getData()));
                data = new DatabaseEntry();
+               key = new DatabaseEntry();
+
              }
            }
-           //After no duplicates go to the next key, check to see if it still contains the term
-           while (cursor.getNext(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS && new String(key.getData()).contains(term))
-           {
-             //Make sure string starts with given term
-             String test = new String(key.getData());
-             test = test.substring(0, term.length());
-             if (term.equals(test))
-             {
-              set.add(new String(data.getData()));
-              data = new DatabaseEntry();
-             }
-              //Get duplicates of that key
-             while (cursor.getNextDup(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
-             {
-               if (term.equals(test))
-               {
-                set.add(new String(data.getData()));
-                data = new DatabaseEntry();
-               }
-             }
-           }
+           
          }
          //If no wildcard present
          else
@@ -157,7 +142,7 @@ public class Queries
           term = term.replaceAll("%", "");
           key.setData(term.getBytes());
           key.setSize(term.length());
-          System.out.println(term);
+          
           //Key range used to find smalled that contains the term
           if (cursor.getSearchKeyRange(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
           {
@@ -170,31 +155,17 @@ public class Queries
               data = new DatabaseEntry();
             }
             //Find duplicates of the key
-            while ( cursor.getNextDup(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+
+            while( cursor.getNext(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS &&
+                   new String(key.getData()).substring(0, term.length()).equals(term))
             {
-              //System.out.println(new String(data.getData()));
+                             
               set.add(new String(data.getData()));
               data = new DatabaseEntry();
+              key = new DatabaseEntry();
             }
           }
-          //After the duplicates are done go to next key, make sure it still contains the term
-          while (cursor.getNext(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS && new String(key.getData()).contains(term))
-          {
-            //Make sure string starts with given term
-            String test = new String(key.getData());
-            test = test.substring(0, term.length());
-            if (term.equals(test))
-            {
-              set.add(new String(data.getData()));
-              data = new DatabaseEntry();
-            }
-            //Get any duplicates
-            while (cursor.getNextDup(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
-            {
-              set.add(new String(data.getData()));
-              data = new DatabaseEntry();
-            }
-          }
+          
           
         }
         //If no wildcard
@@ -245,10 +216,8 @@ public class Queries
           key.setData(sub_query[1].getBytes());
           key.setSize(sub_query[1].length());
           Cursor cursor = scores.openCursor(null, null);
-          //Search for closest score to one given by user
           if (cursor.getSearchKeyRange(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
           {
-            //Prevent adding scores that are equal to one given
             String str = new String(key.getData());
             if (!sub_query[1].equals(str))
             {
@@ -256,11 +225,9 @@ public class Queries
             }
             data = new DatabaseEntry();
             
-            //Get next item in index
             while (cursor.getNext(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
             {
               string = new String(key.getData());
-              //Prevent adding scores that are equal to one given
               if (!sub_query[1].equals(string))
               {
                 //System.out.println(string);
@@ -278,10 +245,8 @@ public class Queries
           key.setData(sub_query[1].getBytes());
           key.setSize(sub_query[1].length());
           Cursor cursor = scores.openCursor(null, null);
-          //Search for closest score to one given by user
           if (cursor.getSearchKeyRange(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
           {
-            //Prevent adding scores that are equal to one given
             String str = new String(key.getData());
             if (!sub_query[1].equals(str))
             {
@@ -292,7 +257,6 @@ public class Queries
             
             while (cursor.getPrev(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
             {
-              //Prevent adding scores that are equal to one given
               string = new String(key.getData());
               if (!sub_query[1].equals(string))
               {
