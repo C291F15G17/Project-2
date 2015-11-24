@@ -139,8 +139,12 @@ public class Queries
           Cursor cursor = scores.openCursor(null, null);
           if (cursor.getSearchKey(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
           {
-            //set.add(new String(data.getData()));
-            System.out.println(data.getData());
+            String str = new String(kety.getData());
+            if (!score.equals(str))
+            {
+              set.add(new String(data.getData()));
+            }
+            
             while (cursor.getNext(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
             {
               string = new String(key.getData());
