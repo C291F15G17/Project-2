@@ -73,7 +73,8 @@ public class Queries
            //Key range used to find smallest that contains the term
            if (cursor.getSearchKeyRange(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
            {
-             String test = term.substring(0, term.length());
+             String test = key.getData();
+             test = test.substring(0, term.length());
              if (term.equals(test))
              {
               set.add(new String(data.getData()));
@@ -90,7 +91,8 @@ public class Queries
            //After no duplicates go to the next key, check to see if it still contains the term
            while (cursor.getNext(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS && new String(key.getData()).contains(term))
            {
-             String test = term.substring(0, term.length());
+             String test = key.getData();
+             test = test.substring(0, term.length());
              if (term.equals(test))
              {
               set.add(new String(data.getData()));
@@ -99,8 +101,11 @@ public class Queries
               //Get duplicates of that key
              while (cursor.getNextDup(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
              {
-               set.add(new String(data.getData()));
-               data = new DatabaseEntry();
+               if (term.equals(test))
+               {
+                set.add(new String(data.getData()));
+                data = new DatabaseEntry();
+               }
              }
            }
          }
