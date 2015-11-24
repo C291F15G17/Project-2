@@ -137,7 +137,7 @@ public class Queries
           key.setData(score.getBytes());
           key.setSize(score.length());
           Cursor cursor = scores.openCursor(null, null);
-          if (cursor.getSearchKey(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+          if (cursor.getSearchKeyRange(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
           {
             String str = new String(kety.getData());
             if (!score.equals(str))
