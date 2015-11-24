@@ -224,8 +224,8 @@ public class Queries
             if (!sub_query[1].equals(str))
             {
               set.add(new String(data.getData()));
-              data = new DatabaseEntry();
             }
+            data = new DatabaseEntry();
             
             //Get next item in index
             while (cursor.getNext(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
@@ -236,8 +236,8 @@ public class Queries
               {
                 //System.out.println(string);
                 set.add(new String(data.getData()));
-                data = new DatabaseEntry();
               }
+              data = new DatabaseEntry();
             }
           }
         } 
@@ -257,8 +257,9 @@ public class Queries
             if (!sub_query[1].equals(str))
             {
               set.add(new String(data.getData()));
-              data = new DatabaseEntry();
+              
             }
+            data = new DatabaseEntry();
             
             while (cursor.getPrev(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
             {
@@ -268,8 +269,8 @@ public class Queries
               {
                 //System.out.println(string);
                 set.add(new String(data.getData()));
-                data = new DatabaseEntry();
               }
+              data = new DatabaseEntry();
             }
           }
         }
@@ -604,8 +605,10 @@ public class Queries
         }
 
       }
-      System.out.println(valid);
       printReviews(valid);
+      System.out.println("Summary of Output:");
+      System.out.println("Set of review ids: " + valid);
+      System.out.println("Number of review ids: " + valid.size());
     }
 
 
