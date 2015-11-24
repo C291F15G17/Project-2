@@ -118,7 +118,8 @@ public class Queries
       return set;
     }
 
-     public static HashSet<String> searchScores(String score, String operation)
+    //Method for handling search for scores 
+    public static HashSet<String> searchScores(String score, String operation)
     {
       HashSet<String> set = new HashSet<String>();
       try
@@ -128,14 +129,35 @@ public class Queries
         //dbConfig.setSortedDuplicates(true);
         Database scores = new Database("sc.idx", null, dbConfig);
         DatabaseEntry key = new DatabaseEntry(), data = new DatabaseEntry();
-        if (operation.equals("<"))
+        
+        if (operation.equals(">"))
         {
-          key.setData("0.0".getBytes());
-          key.setSize("0.0".length());
-          
-        } else
+          key.setData(score.getBytes());
+          key.setSize(score.length());
+          Cursor cursor = scores.openCursor(null, null);
+          if (cursor.getSearchKey(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+          {
+            set.add(new String(data.getData()));
+            while (cursor.getNextDup(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+            {
+              set.add(new String(data.getData()));
+            }
+          }
+        } 
+        //If searching for "<"
+        else
         {
-          
+          key.setData(score.getBytes());
+          key.setSize(score.length());
+          Cursor cursor = scores.openCursor(null, null);
+          if (cursor.getSearchKey(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+          {
+            set.add(new String(data.getData()));
+            while (cursor.getPrevDup(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+            {
+              set.add(new String(data.getData()));
+            }
+          }
         }
         
         scores.close();
@@ -144,11 +166,8 @@ public class Queries
       {
         ex.getMessage();
       }
-      
       return set;
     }
-
-
 
   public static void main(String [] args)
     {
@@ -182,9 +201,87 @@ public class Queries
             }
           }
         }
-        else if (queries.get(i).contains("<") || queries.get(i).contains(">"))
+        //Handle prices, scores, dates
+        else if (queries.get(i).contains("<"))
         {
-          //Handle price, dates and scores
+          String sub_query = queries.get(i).split("<", 0);
+          //Handle score
+          if(sub_query[0].equals("rscore"))
+          {
+            if (valid == null)
+            {
+              valid = searchScore(sub_query[1], "<");
+            }
+            else
+            {
+              valid = retainAll(searchScore(sub_query[1], "<"));
+            }
+          }
+          //Handle price
+          else if(sub_query[0].equals("pprice"))
+          {
+            if (valid == null)
+            {
+             // valid = searchPrice(sub_query[1], "<");
+            }
+            else
+            {
+             // valid = retainAll(searchPrice(sub_query[1], "<"));
+            }
+          }
+          //Handle dates
+          else
+          {
+            if (valid == null)
+            {
+              //valid = searchDate(sub_query[1], "<");
+            }
+            else
+            {
+             // valid = retainAll(searchDate(sub_query[1], "<"));
+            }
+          }
+        }
+        
+        else if (queries.get(i).contains(">"))
+        {
+          String sub_query = queries.get(i).split(">", 0);
+          //Handle score
+          if(sub_query[0].equals("rscore"))
+          {
+            if (valid == null)
+            {
+              valid = searchScore(sub_query[1], ">");
+            }
+            else
+            {
+              valid = retainAll(searchScore(sub_query[1], ">"));
+            }
+          }
+          //Handle price
+          else if(sub_query[0].equals("pprice"))
+          {
+            if (valid == null)
+            {
+             // valid = searchPrice(sub_query[1], ">");
+            }
+            else
+            {
+             // valid = retainAll(searchPrice(sub_query[1], ">"));
+            }
+          }
+          //Handle dates
+          else
+          {
+            if (valid == null)
+            {
+             // valid = searchDate(sub_query[1], ">");
+            }
+            else
+            {
+             // valid = retainAll(searchDate(sub_query[1], ">"));
+            }
+          }
         }
         //Assuming this is only terms with no r: or p:
         else
