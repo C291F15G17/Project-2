@@ -1,4 +1,5 @@
 import java.util.*;
+import java.nio.ByteBuffer;
 import com.sleepycat.db.*;
 
 
@@ -57,6 +58,7 @@ public class Queries
        {
          DatabaseConfig dbConfig = new DatabaseConfig();
          dbConfig.setType(DatabaseType.BTREE);
+         dbConfig.setSortedDuplicates(true);
          Database pterms = new Database("pt.idx", null, dbConfig);
          DatabaseEntry key = new DatabaseEntry(), data = new DatabaseEntry();
          key.setData(term.getBytes());
@@ -68,7 +70,7 @@ public class Queries
            set.add(new String(data.getData()));
            while ( cursor.getNextDup(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
            {
-             System.out.println( new String(data.getData()));
+             System.out.println(new String(data.getData()));
              set.add(new String(data.getData()));
            }
          }
@@ -89,6 +91,7 @@ public class Queries
       {
         DatabaseConfig dbConfig = new DatabaseConfig();
         dbConfig.setType(DatabaseType.BTREE);
+        dbConfig.setSortedDuplicates(true);
         Database rterms = new Database("rt.idx", null, dbConfig);
         DatabaseEntry key = new DatabaseEntry(), data = new DatabaseEntry();
         key.setData(term.getBytes());
@@ -98,12 +101,43 @@ public class Queries
         {
           System.out.println(new String(data.getData()));
           set.add(new String(data.getData()));
-          while ( cursor.getNextDup(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+          while ( cursor.getNextDup(key, data, LockMode.DEFAULT) ==  OperationStatus.SUCCESS)
           {
-            System.out.println( new String(data.getData()));
+            System.out.println(new String(data.getData()));
             set.add(new String(data.getData()));
           }
         }
+        cursor.close();
+        rterms.close();
+      }
+      catch (Exception ex)
+      {
+        ex.getMessage();
+      }
+      
+      return set;
+    }
+
+     public static HashSet<String> searchScores(String score, String operation)
+    {
+      HashSet<String> set = new HashSet<String>();
+      try
+      {
+        DatabaseConfig dbConfig = new DatabaseConfig();
+        dbConfig.setType(DatabaseType.BTREE);
+        dbConfig.setSortedDuplicates(true);
+        Database scores = new Database("sc.idx", null, dbConfig);
+        DatabaseEntry key = new DatabaseEntry(), data = new DatabaseEntry();
+        if (operation.equals("<"))
+        {
+          key.setData("0.0");
+          key.setSize("0.0".length());
+          Cursor cursor = scores.openCursor(null, null);
+        } else
+        {
+          
+        }
+        cursor.close();
         rterms.close();
       }
       catch (Exception ex)
@@ -115,10 +149,11 @@ public class Queries
     }
 
 
+
   public static void main(String [] args)
     {
       ArrayList<String> queries = getQueries();
-      System.out.println(searchPTerms(queries.get(0)));
+      System.out.println(searchRTerms(queries.get(0)));
     }
 
 
