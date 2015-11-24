@@ -210,11 +210,11 @@ public class Queries
           {
             if (valid == null)
             {
-              valid = searchScore(sub_query[1], "<");
+              valid = searchScores(sub_query[1], "<");
             }
             else
             {
-              valid = retainAll(searchScore(sub_query[1], "<"));
+              valid = retainAll(searchScores(sub_query[1], "<"));
             }
           }
           //Handle price
@@ -251,11 +251,11 @@ public class Queries
           {
             if (valid == null)
             {
-              valid = searchScore(sub_query[1], ">");
+              valid = searchScores(sub_query[1], ">");
             }
             else
             {
-              valid = retainAll(searchScore(sub_query[1], ">"));
+              valid = retainAll(searchScores(sub_query[1], ">"));
             }
           }
           //Handle price
