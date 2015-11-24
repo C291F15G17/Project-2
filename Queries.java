@@ -148,7 +148,7 @@ public class Queries
         else
         {
           key.setData(score.getBytes());
-          key.setSize(score.get_length());
+          key.setSize(score.length());
           Cursor cursor = scores.openCursor(null, null);
           if (cursor.getSearchKey(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
           {
