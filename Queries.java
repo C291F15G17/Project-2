@@ -142,7 +142,7 @@ public class Queries
             System.out.println(data.getData());
             while (cursor.getNext(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
             {
-              System.out.println(cursor.getCurrent(key, data, LockMode.DEFAULT).getData().toString());
+              System.out.println(data.getData().toString());
               set.add(new String(data.getData()));
             }
           }
