@@ -141,7 +141,7 @@ public class Queries
             byte[] test = key.getData();
             while (cursor.getNext(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
             {
-              if(key.getData() != test)
+              if(!key.getData().equals(test))
               {
                 set.add(new String(data.getData()));
               }
