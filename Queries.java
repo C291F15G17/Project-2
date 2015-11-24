@@ -94,7 +94,7 @@ public class Queries
              if (term.equals(test))
              {
               set.add(new String(data.getData()));
-              data = new DatebaseEntry();
+              data = new DatabaseEntry();
              }
               //Get duplicates of that key
              while (cursor.getNextDup(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
