@@ -311,6 +311,8 @@ public class Queries
             {
               set.add(new String(key.getData()));
             }
+            data = new DatabaseEntry();
+            key = new DatabaseEntry();
             while (cursor.getNext(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
             {
               string = new String(data.getData());
@@ -319,6 +321,8 @@ public class Queries
               {
                 set.add(new String(key.getData()));
               }
+              data = new DatabaseEntry();
+              key = new DatabaseEntry();
             }
           }
           cursor.close();
@@ -352,6 +356,8 @@ public class Queries
             {
               set.add(new String(key.getData()));
             }
+            data = new DatabaseEntry();
+            key = new DatabaseEntry();
             while (cursor.getNext(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
             {
               string = new String(data.getData());
@@ -360,6 +366,8 @@ public class Queries
               {
                 set.add(new String(key.getData()));
               }
+              data = new DatabaseEntry();
+              key = new DatabaseEntry();
             }
           }
           cursor.close();
@@ -404,6 +412,8 @@ public class Queries
             {
               set.add(new String(key.getData()));
             }
+            data = new DatabaseEntry();
+            key = new DatabaseEntry();
             
             while (cursor.getNext(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
             {
@@ -416,6 +426,8 @@ public class Queries
               {
                 set.add(new String(key.getData()));
               }
+              data = new DatabaseEntry();
+              key = new DatabaseEntry();
             }
           }
           cursor.close();
@@ -451,6 +463,8 @@ public class Queries
             {
               set.add(new String(key.getData()));
             }
+            data = new DatabaseEntry();
+            key = new DatabaseEntry();
             
             while (cursor.getNext(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
             {
@@ -463,6 +477,8 @@ public class Queries
               {
                 set.add(new String(key.getData()));
               }
+              data = new DatabaseEntry();
+              key = new DatabaseEntry();
             }
           }
           cursor.close();
