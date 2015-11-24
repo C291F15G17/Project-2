@@ -138,7 +138,7 @@ public class Queries
           if (cursor.getSearchKey(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
           {
             set.add(new String(data.getData()));
-            while (cursor.getNextDup(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+            while (cursor.getNext(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
             {
               set.add(new String(data.getData()));
             }
@@ -153,7 +153,7 @@ public class Queries
           if (cursor.getSearchKey(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
           {
             set.add(new String(data.getData()));
-            while (cursor.getPrevDup(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+            while (cursor.getPrev(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
             {
               set.add(new String(data.getData()));
             }
