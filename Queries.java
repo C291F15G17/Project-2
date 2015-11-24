@@ -436,10 +436,13 @@ public class Queries
         {
           System.out.println("REVIEW ID: " + revid);
           String review = new String(data.getData());
-          String[] revparts = review.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
-          System.out.println("PRODUCT NO = " + revparts[0] + " | PRODUCT NAME = " + revparts[1] + " | PRICE = " + revparts[3]);
-          System.out.println("USER NO = " + revparts[4] + " | USERNAME = " + revparts[5]);
-          
+          String[] revparts = review.split("(?x),(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
+          System.out.println("PRODUCT NO = " + revparts[0] + " | PRODUCT NAME = " + revparts[1] + " | PRICE = " + revparts[2]);
+          System.out.println("USER NO = " + revparts[3] + " | USERNAME = " + revparts[4]);
+          System.out.println("HELPFUL RATING = " + revparts[5] + " | RATING = " + revparts[6]);
+          System.out.println("REVIEW NO = " + revparts[7] + " | REVIEW TITLE = " + revparts[8]);
+          System.out.println("REVIEW = " + revparts[9]);
+
           System.out.println();
 //System.out.println(new String(data.getData()));
         }
