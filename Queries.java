@@ -159,8 +159,13 @@ public class Queries
           //Key range used to find smalled that contains the term
           if (cursor.getSearchKeyRange(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
           {
-            set.add(new String(data.getData()));
-            data = new DatabaseEntry();
+            String test = new String(key.getData());
+            test = test.substring(0, term.length());
+            if(term.equals(test))
+            {
+              set.add(new String(data.getData()));
+              data = new DatabaseEntry();
+            }
             //Find duplicates of the key
             while ( cursor.getNextDup(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
             {
@@ -172,7 +177,13 @@ public class Queries
           //After the duplicates are done go to next key, make sure it still contains the term
           while (cursor.getNext(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS && new String(key.getData()).contains(term))
           {
-            set.add(new String(data.getData()));
+            String test = new String(key.getData());
+            test = test.substring(0, term.length());
+            if (term.equals(test))
+            {
+              set.add(new String(data.getData()));
+              data = new DatabaseEntry();
+            }
             //Get any duplicates
             while (cursor.getNextDup(key, data, LockMode.DEFAULT) == OperationStatus.SUCCESS)
             {
